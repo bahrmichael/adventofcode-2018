@@ -13,7 +13,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
 
 class Day1BTest {
 
@@ -39,7 +38,6 @@ class Day1BTest {
             for (final int integer : input) {
                 knownValues.add(result);
                 result += integer;
-                System.out.println(result);
                 if (knownValues.contains(result)) {
                     return result;
                 }
