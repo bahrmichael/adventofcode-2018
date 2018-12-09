@@ -24,18 +24,25 @@ public class Day9Test {
     private long getScore(int players, int lastMarble) {
         playerScores = new long[players];
         int currentPlayer = 0;
-
         int currentMarble = 0;
+
+        // pick the first marble
         Node current = new Node(currentMarble);
         currentPlayer++;
 
         while (currentMarble <= lastMarble) {
+            // pick the next marble
             final Node node = new Node(++currentMarble);
+            // and insert it
             current = current.insert(node, currentPlayer);
 
             currentPlayer = (currentPlayer + 1) % players;
         }
 
+        return getTopScore();
+    }
+
+    private long getTopScore() {
         long result = 0;
         for (long playerScore : playerScores) {
             if (result < playerScore) {
@@ -50,19 +57,29 @@ public class Day9Test {
 
         private Node right;
         private int id;
-        public Node(int id) {
+        Node(int id) {
             this.id = id;
         }
 
-        private Node getLeft(int steps) {
-            Node current = left;
-            for (int i = 1; i < steps; i++) {
-                current = current.left;
+        private Node move(int steps) {
+            Node current = this;
+            if (steps < 0) {
+                current = left;
+                for (int i = -1; i > steps; i--) {
+                    current = current.left;
+                }
+                return current;
+            } else if (steps > 0) {
+                current = right;
+                for (int i = 1; i < steps; i++) {
+                    current = current.right;
+                }
+                return current;
             }
             return current;
         }
 
-        public Node insert(Node node, int currentPlayer) {
+        Node insert(Node node, int currentPlayer) {
             if (null == right) {
                 // have A point to B
                 right = node;
@@ -74,25 +91,25 @@ public class Day9Test {
                 // First, the current player keeps the marble they would have placed, adding it to their score.
                 playerScores[currentPlayer] += node.id;
                 // In addition, the marble 7 marbles counter-clockwise from the current marble is removed from the circle
-                final Node removable = getLeft(7);
+                final Node removable = move(-7);
                 // -8 shall right point to -6 and vice versa
-                getLeft(8).right = getLeft(6);
-                getLeft(6).left = getLeft(8);
+                move(-8).right = move(-6);
+                move(-6).left = move(-8);
                 // and also added to the current player's score.
                 playerScores[currentPlayer] += removable.id;
                 // The marble located immediately clockwise of the marble that was removed becomes the new current marble.
-                return getLeft(6);
+                return move(-6);
             } else {
                 // remember the second marble to the right
-                final Node temp = this.right.right;
+                final Node temp = move(2);
                 // replace the second marble to the right
-                this.right.right = node;
+                move(1).right = node;
                 // have the second point to the old second (now third)
                 node.right = temp;
 
                 // let the nodes point left
                 node.left = this.right;
-                this.right.right.right.left = node;
+                move(3).left = node;
             }
             return node;
         }
