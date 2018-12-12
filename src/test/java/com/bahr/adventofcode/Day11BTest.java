@@ -8,8 +8,8 @@ class Day11BTest {
 
     @Test
     void run() {
-//        assertEquals("Total 113 at 90,269,16", getResult(18));
-//        assertEquals("Total 119 at 232,251,12", getResult(42));
+        assertEquals("Total 113 at 90,269,16", getResult(18));
+        assertEquals("Total 119 at 232,251,12", getResult(42));
         System.out.println(getResult(4151));
     }
 
